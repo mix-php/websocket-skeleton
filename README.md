@@ -1,6 +1,6 @@
-# Websocket development skeleton
+# WebSocket development skeleton
 
-帮助你快速搭建 Websocket 项目骨架，并指导你如何使用该骨架的细节。
+帮助你快速搭建 WebSocket 项目骨架，并指导你如何使用该骨架的细节。
 
 > 骨架默认开启了 HTTP 请求日志、SQL、Redis 日志，压测前请先关闭 `.env` 的 `APP_DEBUG`
 
