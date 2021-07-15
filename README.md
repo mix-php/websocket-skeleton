@@ -12,7 +12,7 @@ composer create-project --prefer-dist mix/websocket-skeleton websocket
 
 ## Quick start
 
-> 需要先安装 [Swoole](https://wiki.swoole.com/#/environment) 或者 [WorkerMan](http://doc.workerman.net/install/requirement.html)
+> 需要先安装 [Swoole](https://wiki.swoole.com/#/environment)
 
 启动 Swoole 协程服务
 
