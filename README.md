@@ -8,6 +8,8 @@
 
 > 需要先安装 [Swoole](https://wiki.swoole.com/#/environment)
 
+- Swoole >= 4.4.15: https://wiki.swoole.com/#/environment
+
 ```
 composer create-project --prefer-dist mix/websocket-skeleton websocket
 ```
