@@ -2,8 +2,11 @@
 
 namespace App\Service;
 
+use App\Container\Logger;
 use App\Handler\Hello;
 use Mix\WebSocket\Connection;
+use Mix\WebSocket\Exception\CloseFrameException;
+use Mix\WebSocket\Exception\ReadMessageException;
 use Swoole\Coroutine\Channel;
 
 class Session
@@ -42,7 +45,16 @@ class Session
         // 接收消息
         go(function () {
             while (true) {
-                $frame = $this->conn->recv();
+                try {
+                    $frame = $this->conn->readMessage();
+                } catch (\Throwable $ex) {
+                    // 忽略一些异常日志
+                    if (!in_array($ex->getMessage(), ['Active closure of the user', 'Connection reset by peer'])) {
+                        Logger::instance()->error(sprintf('ReadMessage: %s', $ex->getMessage()));
+                    }
+                    $this->stop();
+                    return;
+                }
                 $message = $frame->data;
 
                 (new Hello($this))->index($message);
@@ -56,12 +68,24 @@ class Session
                 if (!$data) {
                     return;
                 }
+
                 $frame = new \Swoole\WebSocket\Frame();
                 $frame->data = $data;
                 $frame->opcode = WEBSOCKET_OPCODE_TEXT; // or WEBSOCKET_OPCODE_BINARY
-                $this->conn->send($frame);
+                try {
+                    $this->conn->writeMessage($frame);
+                } catch (\Throwable $ex) {
+                    Logger::instance()->error(sprintf('WriteMessage: %s', $ex->getMessage()));
+                    $this->stop();
+                    return;
+                }
             }
         });
+    }
+
+    public function stop()
+    {
+        $this->writeChan->close();
     }
 
 }
