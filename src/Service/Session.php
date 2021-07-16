@@ -5,8 +5,6 @@ namespace App\Service;
 use App\Container\Logger;
 use App\Handler\Hello;
 use Mix\WebSocket\Connection;
-use Mix\WebSocket\Exception\CloseFrameException;
-use Mix\WebSocket\Exception\ReadMessageException;
 use Swoole\Coroutine\Channel;
 
 class Session
