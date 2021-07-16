@@ -56,15 +56,14 @@ sh shell/server.sh stop
 sh shell/server.sh restart
 ```
 
-## 编写一个 WebSocket
+## 编写一个 WebSocket 服务
 
 首先修改根目录 `.env` 文件的数据库信息
 
-然后在 `routes/index.php` 定义一个新的路由，同时创建一个升级器
+然后在 `routes/index.php` 定义一个新的路由
 
 ```php
-$upgrader = new Mix\WebSocket\Upgrader();
-$vega->handleCall('/websocket', [new WebSocket($upgrader), 'index'])->methods('GET');
+$vega->handleCall('/websocket', [new WebSocket(), 'index'])->methods('GET');
 ```
 
 路由里使用了 `WebSocket` 控制器，我们需要创建他
@@ -77,33 +76,19 @@ $vega->handleCall('/websocket', [new WebSocket($upgrader), 'index'])->methods('G
 
 namespace App\Controller;
 
+use App\Container\Upgrader;
 use App\Service\Session;
 use Mix\Vega\Context;
-use Mix\WebSocket\Upgrader;
 
 class WebSocket
 {
-
-    /**
-     * @var Upgrader
-     */
-    protected $upgrader;
-
-    /**
-     * WebSocket constructor.
-     * @param Upgrader $upgrader
-     */
-    public function __construct(Upgrader $upgrader)
-    {
-        $this->upgrader = $upgrader;
-    }
 
     /**
      * @param Context $ctx
      */
     public function index(Context $ctx)
     {
-        $conn = $this->upgrader->upgrade($ctx->request, $ctx->response);
+        $conn = Upgrader::instance()->upgrade($ctx->request, $ctx->response);
         $session = new Session($conn);
         $session->start();
     }
@@ -207,6 +192,10 @@ composer run-script swoole:start
 使用测试工具测试
 
 - [WEBSOCKET 在线测试工具](http://www.easyswoole.com/wstool.html)
+
+## 如何使用 WebSocket 客户端
+
+- [mix-php/websocket#客户端-client](https://github.com/mix-php/websocket#%E5%AE%A2%E6%88%B7%E7%AB%AF-client)
 
 ## 使用容器中的对象
 
