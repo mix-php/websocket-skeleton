@@ -38,8 +38,10 @@ composer run-script --timeout=0 swooleco:start
 当然也可以直接下面这样启动，效果是一样的，但是 `scripts` 能帮你记录到底有哪些可用的命令，同时在IDE中调试更加方便。
 
 ```
-php bin/swoole.php start
+php bin/swooleco.php start
 ```
+
+## 部署
 
 线上部署启动时，修改 `shell/server.sh` 脚本中的绝对路径和参数
 
@@ -57,6 +59,8 @@ sh shell/server.sh start
 sh shell/server.sh stop
 sh shell/server.sh restart
 ```
+
+使用 `nginx` 或者 `SLB` 代理到服务器端口即可
 
 ## 编写一个 WebSocket 服务
 
